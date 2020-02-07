@@ -1,0 +1,41 @@
+---
+
+- name: Installing custom APT repository GPG key
+  apt_key:
+    url: https://www.domain.com/key.asc
+    state: present
+
+- name: Adding custom APT repository
+  apt_repository:
+    repo: "deb https://www.domain.com/debian/ stable main"
+    state: present
+    filename: custom
+    update_cache: yes
+
+- name: Forcing APT cache update
+  apt: update_cache=yes
+  tags:
+    - update-cache
+  when: {{ hm_util_rolecreator__role_var_prefix }}__pkgcache_force_update
+
+- name: Removing unwanted system packages
+  apt:
+    name: "{{ '{{' }} {{ hm_util_rolecreator__role_var_prefix }}__remove_packages[ansible_os_family|lower]['apt'] {{ '}}' }}"
+    state: absent
+
+- name: "Installing required system packages"
+  apt:
+    name: "{{ '{{' }} {{ hm_util_rolecreator__role_var_prefix }}__install_packages[ansible_os_family|lower]['apt'] {{ '}}' }}"
+    state: latest
+
+- name: Installing required system-wide Python2 modules
+  pip:
+    name: "{{ '{{' }} {{ hm_util_rolecreator__role_var_prefix }}__install_packages[ansible_os_family|lower]['pip2'] {{ '}}' }}"
+    executable: pip2
+    state: latest
+
+- name: Installing required system-wide Python3 modules
+  pip:
+    name: "{{ '{{' }} {{ hm_util_rolecreator__role_var_prefix }}__install_packages[ansible_os_family|lower]['pip3'] {{ '}}' }}"
+    executable: pip3
+    state: latest

@@ -1,0 +1,21 @@
+---
+
+{{ hm_util_rolecreator__role_var_prefix }}__pkgcache_force_update: false
+
+{{ hm_util_rolecreator__role_var_prefix }}__remove_packages:
+  debian:
+    apt:
+      - package1
+      - package2
+
+{{ hm_util_rolecreator__role_var_prefix }}__install_packages:
+  debian:
+    apt:
+      - package3
+      - package4
+    pip2:
+      - package5
+      - package6
+    pip3
+      - package7
+      - package8

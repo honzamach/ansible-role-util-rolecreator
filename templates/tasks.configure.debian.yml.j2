@@ -1,0 +1,36 @@
+---
+
+- name: Managing work directory
+  file:
+    path: "/etc"
+    owner: "root"
+    group: "root"
+    mode: 0755
+    state: directory
+
+- name: Uploading file
+  copy:
+    src: "config.ini"
+    dest: "/etc/config.ini"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Managing configuration file
+  template:
+    src: "{{ item }}"
+    dest: "/etc/config.json"
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  with_first_found:
+    - "inventory/host_files/{{ inventory_hostname }}/honzamach.shibboleth/config.json.{{ ansible_distribution_release }}.j2"
+    - "inventory/host_files/{{ inventory_hostname }}/honzamach.shibboleth/config.json.j2"
+    - "inventory/group_files/servers_{{ msms_server_type }}/honzamach.shibboleth/config.json.{{ ansible_distribution_release }}.j2"
+    - "inventory/group_files/servers_{{ msms_server_type }}/honzamach.shibboleth/config.json.j2"
+    - "inventory/group_files/servers/honzamach.shibboleth/config.json.{{ ansible_distribution_release }}.j2"
+    - "inventory/group_files/servers/honzamach.shibboleth/config.json.j2"
+    - "config.json.{{ ansible_distribution_release }}.j2"
+    - "config.json.j2"
+  notify: Restart service

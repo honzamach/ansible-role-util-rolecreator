@@ -1,0 +1,54 @@
+--- 
+
+- name: Creating directory structure for the new role
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+  loop:
+    - "{{ hm_util_rolecreator__role_dir }}"
+    - "{{ hm_util_rolecreator__role_dir }}/defaults"
+    - "{{ hm_util_rolecreator__role_dir }}/files"
+    - "{{ hm_util_rolecreator__role_dir }}/handlers"
+    - "{{ hm_util_rolecreator__role_dir }}/meta"
+    - "{{ hm_util_rolecreator__role_dir }}/tasks"
+    - "{{ hm_util_rolecreator__role_dir }}/templates"
+    - "{{ hm_util_rolecreator__role_dir }}/tests"
+    - "{{ hm_util_rolecreator__role_dir }}/vars"
+
+
+- name: Creating Git repository for the new role
+  command: "git init {{ hm_util_rolecreator__role_dir }}"
+  args:
+    creates: "{{ hm_util_rolecreator__role_dir }}/.git"
+
+- name: Setting Git configurations for the new role
+  git_config:
+    name: "{{ item[0] }}"
+    repo: "{{ hm_util_rolecreator__role_dir }}"
+    scope: local
+    value: "{{ item[1] }}"
+  loop:
+    - ["user.name", "{{ hm_util_rolecreator__author_name }}"]
+    - ["user.email", "{{ hm_util_rolecreator__author_email }}"]
+
+- name: Templating default files for the new role
+  template:
+    src: "{{ item[0] }}"
+    dest: "{{ item[1] }}"
+    mode: 0644
+  loop:
+    - ["gitignore.j2", "{{ hm_util_rolecreator__role_dir }}/.gitignore"]
+    - ["travis.yml.j2", "{{ hm_util_rolecreator__role_dir }}/.travis.yml"]
+    - ["LICENSE.j2", "{{ hm_util_rolecreator__role_dir }}/LICENSE"]
+    - ["README.rst.j2", "{{ hm_util_rolecreator__role_dir }}/README.rst"]
+    - ["role_playbook.yml.j2", "{{ hm_util_rolecreator__role_dir }}/role_{{ hm_util_rolecreator__role_name_short }}.yml"]
+    - ["defaults.main.yml.j2", "{{ hm_util_rolecreator__role_dir }}/defaults/main.yml"]
+    - ["handlers.main.yml.j2", "{{ hm_util_rolecreator__role_dir }}/handlers/main.yml"]
+    - ["meta.main.yml.j2", "{{ hm_util_rolecreator__role_dir }}/meta/main.yml"]
+    - ["tasks.main.yml.j2", "{{ hm_util_rolecreator__role_dir }}/tasks/main.yml"]
+    - ["tasks.check.yml.j2", "{{ hm_util_rolecreator__role_dir }}/tasks/check.yml"]
+    - ["tasks.install.debian.yml.j2", "{{ hm_util_rolecreator__role_dir }}/tasks/install.debian.yml"]
+    - ["tasks.configure.debian.yml.j2", "{{ hm_util_rolecreator__role_dir }}/tasks/configure.debian.yml"]
+    - ["tests.inventory.j2", "{{ hm_util_rolecreator__role_dir }}/tests/inventory"]
+    - ["tests.test.yml.j2", "{{ hm_util_rolecreator__role_dir }}/tests/test.yml"]

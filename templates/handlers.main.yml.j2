@@ -1,0 +1,11 @@
+---
+
+- name: Restart buildmaster service
+  service:
+    name: buildmaster
+    state: restarted
+    
+- name: Rebuild documentation
+  shell: "make docs-html"
+  delegate_to: localhost
+  run_once: true

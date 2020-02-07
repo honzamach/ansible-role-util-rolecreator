@@ -1,0 +1,16 @@
+galaxy_info:
+  role_name: util_rolecreator
+  author: Jan Mach
+  description: Ansible role for quick bootstrapping of role skeletons.
+  license: MIT
+  min_ansible_version: 2.5
+  github_branch: master
+  platforms:
+    - name: Debian
+      versions:
+        - all
+  galaxy_tags:
+    - ansible
+    - utility
+
+dependencies: []

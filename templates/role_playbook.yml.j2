@@ -1,0 +1,43 @@
+---
+
+#
+# This is an example playbook that you can immediatelly use after installing the
+# role from Ansible Galaxy. Just make sure to put your target hosts to appropriate
+# group in your inventory file.
+#
+# When installing role manually by cloning directly GitHub repository please use
+# following command (otherwise you may break role dependency system):
+#
+#   git clone https://github.com/honzamach/ansible-role-util-rolecreator.git honzamach.util_rolecreator
+#
+
+- hosts: localhost
+  connection: local
+  vars_prompt:
+
+    - name: hm_util_rolecreator__role_name
+      prompt: "Name for the new role?"
+      private: no
+
+    - name: hm_util_rolecreator__role_description
+      prompt: "Description for the new role?"
+      private: no
+
+    - name: hm_util_rolecreator__role_var_prefix
+      prompt: "Prefix of the variables of the role?"
+      private: no
+
+    - name: hm_util_rolecreator__author_name
+      prompt: "Name of the author of the role?"
+      private: no
+      default: "{{ hm_util_rolecreator__author_name }}"
+
+    - name: hm_util_rolecreator__author_email
+      prompt: "Email of the author of the role?"
+      private: no
+      default: "{{ hm_util_rolecreator__author_email }}"
+
+  roles:
+    - role: honzamach.util_rolecreator
+  tags:
+    - role-util-rolecreator

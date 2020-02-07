@@ -1,0 +1,72 @@
+---
+
+#
+# Perform initial role sanity checks.
+#
+
+- import_tasks: check.yml
+
+#
+# Calculate and set additional facts and validate them.
+#
+
+- name: Determining short name for the new role 
+  set_fact:
+    hm_util_rolecreator__role_name_short: "{{ hm_util_rolecreator__role_name.split('.') | list | last }}"
+
+- name: Determining ID for the new role 
+  set_fact:
+    hm_util_rolecreator__role_id: "{{ hm_util_rolecreator__role_name | replace('.', '-') | replace('_', '-') }}"
+
+- name: Determining short ID for the new role 
+  set_fact:
+    hm_util_rolecreator__role_id_short: "{{ hm_util_rolecreator__role_name_short | replace('_', '-') }}"
+
+- name: Determining name of directory for the new role 
+  set_fact:
+    hm_util_rolecreator__role_dir: "{{ hm_util_rolecreator__rolepar_dir }}/{{ hm_util_rolecreator__role_name }}"
+
+- name: Detecting existence of the parent directory for the new role
+  stat:
+    path: "{{ hm_util_rolecreator__rolepar_dir }}"
+  register: stat_result
+
+- name: Checking that the parent directory for the new role already exists
+  assert:
+    that:
+      - "stat_result.stat.exists == True"
+    msg: Parent directory for the new role does not exist
+
+- name: Detecting existence of the directory for the new role
+  stat:
+    path: "{{ hm_util_rolecreator__role_dir }}"
+  register: stat_result
+
+- name: Checking that the directory for the new role does not already exist
+  assert:
+    that:
+      - "stat_result.stat.exists == False"
+    msg: Directory for the new role already exists
+
+#
+# Request confirmation before proceeding.
+#
+
+- name: Review configuration parameters for the new role
+  debug:
+    msg: "role_name:{{ hm_util_rolecreator__role_name }};role_name_short:{{ hm_util_rolecreator__role_name_short }};role_id:{{ hm_util_rolecreator__role_id }};role_var_prefix:{{ hm_util_rolecreator__role_var_prefix }}"
+
+- name: Confirm creation of the new role according to the configuration parameters above
+  pause:
+    prompt: "Do you want to create new role '{{ hm_util_rolecreator__role_name }}' in '{{ hm_util_rolecreator__role_dir }}' (yes/no)?"
+  register: hm_util_rolecreator__confirm
+
+#
+# Create new role.
+#
+
+- block:
+
+    - import_tasks: _create_role.yml
+
+  when: hm_util_rolecreator__confirm.user_input | bool

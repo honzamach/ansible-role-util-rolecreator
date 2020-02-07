@@ -1,0 +1,13 @@
+---
+
+- name: Checking sanity of role configuration parameters
+  assert:
+    that:
+      - 'hm_util_rolecreator__role_name is defined'
+      - 'hm_util_rolecreator__role_name is match("[a-z][_.a-z0-9]+")'
+      - 'hm_util_rolecreator__role_description is defined'
+      - 'hm_util_rolecreator__role_var_prefix is defined'
+      - 'hm_util_rolecreator__role_var_prefix is match("[a-z][_.a-z0-9]+")'
+      - 'hm_util_rolecreator__author_name is defined'
+      - 'hm_util_rolecreator__author_email is defined'
+    msg: "Following configuration values are mandatory: hm_util_rolecreator__role_name, hm_util_rolecreator__role_description, hm_util_rolecreator__role_var_prefix, hm_util_rolecreator__author_name, hm_util_rolecreator__author_email"

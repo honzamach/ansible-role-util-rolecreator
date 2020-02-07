@@ -1,0 +1,21 @@
+---
+
+hm_util_rolecreator__role_name:
+
+hm_util_rolecreator__role_description: "<<ROLE-DESCRIPTION>>"
+
+hm_util_rolecreator__role_var_prefix:
+
+hm_util_rolecreator__author_name: Honza Mach
+
+hm_util_rolecreator__author_email: honza.mach.ml@gmail.com
+
+hm_util_rolecreator__roles_dir: inventory/roles
+
+hm_util_rolecreator__rolepar_dir: "{{ playbook_dir }}/{{ hm_util_rolecreator__roles_dir }}"
+
+hm_util_rolecreator__username_galaxy: honzamach
+
+hm_util_rolecreator__username_github: honzamach
+
+hm_util_rolecreator__username_travis: honzamach
